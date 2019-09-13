@@ -34,11 +34,15 @@ install: manifests
 # Deploy controller in the configured Kubernetes cluster in ~/.kube/config
 deploy: manifests
 	kustomize build config/default | kubectl apply -f -
+	kubectl apply -f config/default/rbac/cdap_role.yaml
+	kubectl apply -f config/default/rbac/cdap_role_binding.yaml
 
 # Deploy controller in the configured Kubernetes cluster in ~/.kube/config
 undeploy: manifests
 	kustomize build config/default | kubectl delete -f -
 	kubectl delete -f config/crds || true
+	kubectl delete -f config/default/rbac/cdap_role.yaml || true
+	kubectl delete -f config/default/rbac/cdap_role_binding.yaml || true
 
 # Generate manifests e.g. CRD, RBAC etc.
 manifests:
